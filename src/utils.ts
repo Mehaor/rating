@@ -7,7 +7,6 @@ export function normalizeRatingIds(ids: any[], userId: any): string[]  {
             ratingData[id.toString()] = true;
         }
     });
-    console.log(normalizedIds);
     return normalizedIds;
 }
 

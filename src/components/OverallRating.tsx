@@ -5,18 +5,38 @@ import {getOverallRating} from '../redux/actions/actionsRating';
 import CircularProgress from 'material-ui/CircularProgress';
 import {setLeftPanelOpen} from '../redux/actions/actionsLeftPanel';
 import {setTitle} from '../redux/actions/actionsTitle';
+import Snackbar from 'material-ui/Snackbar';
 
 class OverallRating extends React.Component<any, any> {
+    
+    messageTimeout: number;
+
+    constructor() {
+        super();
+        this.state = {messageOpen: false};
+    }
 
     componentDidMount() {
         this.props.getRatingData();
         this.props.setLPOpen(false);
         this.props.setTPTitle('ЧАТОВИДЕНЬЕ');
+        /*this.messageTimeout = window.setTimeout(() => {
+            this.setState({messageOpen: true});
+        }, 500);*/
+    }
+
+    componentWillUnmount() {
+        this.messageTimeout && window.clearTimeout(this.messageTimeout);
     }
 
     render() {
         let {loading, items} =  this.props;
-        return loading ? <CircularProgress /> : <UserList items={items} />
+        return loading ? 
+            <CircularProgress /> : 
+            <div>
+                <UserList items={items} />
+                <Snackbar open={this.state.messageOpen} message="Кеша иди нахуй" autoHideDuration={4000}/>
+            </div>
     }
 }
 

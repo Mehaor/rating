@@ -5,6 +5,7 @@ import {getMyRating, updateMyRating} from '../redux/actions/actionsRating';
 import CircularProgress from 'material-ui/CircularProgress';
 import {setLeftPanelOpen} from '../redux/actions/actionsLeftPanel';
 import {setTitle} from '../redux/actions/actionsTitle';
+import Subheader from 'material-ui/Subheader';
 
 class MyRating extends React.Component<any, any> {
 
@@ -38,6 +39,7 @@ class MyRating extends React.Component<any, any> {
         }
         return (<div>
                     <div>
+                    <Subheader>Тяни за аватарку для сортировки</Subheader>
                         <h2>С рейтингом</h2>
                         <UserListSortable items={rating} withPlace={true} sortableOptions={{
                             group: {name: 'shared', pull: false},
