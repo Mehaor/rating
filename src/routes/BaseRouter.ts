@@ -38,7 +38,7 @@ class BaseRouter {
             let promises = [];
             users.forEach((user: any) => {
                 promises.push(new Promise((resolve, reject) => {
-                    let normalizedIds = normalizeRatingIds(user.rating);
+                    let normalizedIds = normalizeRatingIds(user.rating, user._id);
                     User.update({_id: user._id}, {rating: normalizedIds}, () => {
                         resolve();
                     })

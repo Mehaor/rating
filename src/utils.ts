@@ -1,12 +1,13 @@
-export function normalizeRatingIds(ids: any[]): string[]  {
+export function normalizeRatingIds(ids: any[], userId: any): string[]  {
     let ratingData = {};
     let normalizedIds = [];
     ids.forEach((id) => {
-        if (!ratingData[id.toString()]) {
+        if (!ratingData[id.toString()] && (id.toString() != userId.toString())) {
             normalizedIds.push(id.toString());
             ratingData[id.toString()] = true;
         }
     });
+    console.log(normalizedIds);
     return normalizedIds;
 }
 

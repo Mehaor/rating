@@ -16,7 +16,8 @@ class TopPanel extends React.Component<any, any> {
     render() {
         let {leftPanelOpen, setLeftPanelOpen, isDesktop, title} = this.props;
         return (<AppBar title={title}
-                        showMenuIconButton={!isDesktop} 
+                        showMenuIconButton={!isDesktop}
+                        iconClassNameRight="fa fa-eur"
                         onLeftIconButtonTouchTap={setLeftPanelOpen.bind(this, !leftPanelOpen)} />)
 
     }

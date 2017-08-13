@@ -13,7 +13,7 @@ export const UserItem = ({item, position=0, withPoints=false}) =>  <ListItem
       }>{position ? `${position}. ` : ''}{item.nickname}{withPoints ? ` (${item.points})` : ''}</ListItem>;
 
 export const UserList = ({items}) => <List>
-        {items.map((item, index) => { return <UserItem key={item._id} item={item} position={index + 1} withPoints={true} /> })}
+        {items.map((item, index) => { return <UserItem key={item._id} item={item} position={item.position} withPoints={true} /> })}
     </List>
 
 

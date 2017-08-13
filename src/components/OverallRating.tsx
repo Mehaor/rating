@@ -11,7 +11,7 @@ class OverallRating extends React.Component<any, any> {
     componentDidMount() {
         this.props.getRatingData();
         this.props.setLPOpen(false);
-        this.props.setTPTitle('Общий рейтинг');
+        this.props.setTPTitle('ЧАТОВИДЕНЬЕ');
     }
 
     render() {

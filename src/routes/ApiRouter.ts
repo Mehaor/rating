@@ -43,7 +43,10 @@ class ApiRouter {
 
             users.forEach((user: any, index) => {
                 let userData = {_id: user.id, nickname: user.nickname, avatar: user.avatar};
-                if (ratingIds.indexOf(user._id) == -1) {
+                if (user._id.toString() == req.user._id.toString()) {
+
+                }
+                else if (ratingIds.indexOf(user._id) == -1) {
                     unrated.push(userData);
                 }
                 else {
@@ -61,8 +64,8 @@ class ApiRouter {
             return res.status(400).send({'msg': 'error'});
         };
         let ratingError = false;
-        let previousIds = normalizeRatingIds(req.user.rating);
-        let ratingIds: string[] = normalizeRatingIds(req.body.rating);
+        let previousIds = normalizeRatingIds(req.user.rating, req.user._id);
+        let ratingIds: string[] = normalizeRatingIds(req.body.rating, req.user._id);
         previousIds.forEach((id) => {
             if (ratingIds.indexOf(id) == -1) {
                 ratingError = true;
@@ -84,7 +87,9 @@ class ApiRouter {
             let userRatingData = {};
             users.forEach((user: any, index) => {
                 user.rating.forEach((id: string, index: number) => {
-                    if (userRatingData[id] == undefined) {
+                    if (id.toString() == user._id.toString()) {
+                    }
+                    else if (userRatingData[id] == undefined) {
                         userRatingData[id] = getPointsByIndex(index);
                     }
                     else {
@@ -103,6 +108,19 @@ class ApiRouter {
             });
 
             ratedItems.sort((a, b) => { return b.points - a.points });
+            let lastPlace = 1;
+            ratedItems.forEach((item: any, index: number) => {
+                if (index == 0) {
+                    item.position = 1;
+                }
+                else {
+                    if (item.points < ratedItems[index - 1].points) {
+                        lastPlace++;
+                    }
+                    item.position = lastPlace;
+                }
+
+            })
             res.send(ratedItems);
         })
         // res.send({});
