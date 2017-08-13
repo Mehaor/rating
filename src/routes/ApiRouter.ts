@@ -1,6 +1,17 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {User, UserSchema} from '../models/user';
 
+function normalizeRatingIds(ids: any[]): string[]  {
+    let ratingData = {};
+    let normalizedIds = [];
+    ids.forEach((id) => {
+        if (!ratingData[id.toString()]) {
+            normalizedIds.push(id.toString());
+            ratingData[id.toString()] = true;
+        }
+    });
+    return normalizedIds;
+}
 
 class ApiRouter {
     router: Router;
@@ -29,9 +40,9 @@ class ApiRouter {
         }        
     }
 
-    getMyRatingData(req: Request, res: Response, next: NextFunction) {
-        let ratingIds: any[] = req.user.rating;
 
+    getMyRatingData(req: Request, res: Response, next: NextFunction) {
+        let ratingIds: string[] = req.user.rating;
         User.find({isActive: true}).exec((err, users: any[]) => {
             if (err) {
                 return res.status(400).send({'msg': 'error'});
@@ -57,7 +68,8 @@ class ApiRouter {
         if (!req.body.rating) {
             return res.status(400).send({'msg': 'error'});
         };
-        User.update({_id: req.user._id}, {rating: req.body.rating}, (err, raw) => {
+        let ratingIds: string[] = normalizeRatingIds(req.body.rating);
+        User.update({_id: req.user._id}, {rating: ratingIds}, (err, raw) => {
             if (err) {
                 return res.status(400).send({'msg': 'error'});
             }
@@ -70,7 +82,7 @@ class ApiRouter {
             let userRatingData = {};
             users.forEach((user: any, index) => {
                 user.rating.forEach((id: string, index: number) => {
-                    if (!userRatingData[id]) {
+                    if (userRatingData[id] == undefined) {
                         userRatingData[id] = index;
                     }
                     else {

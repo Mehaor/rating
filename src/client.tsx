@@ -29,6 +29,7 @@ class App extends React.Component<any, any> {
                         <Switch>
                             <Route exact path="/" component={OverallRating} />
                             <Route exact path="/my" component={MyRating} />
+                            <Route path="/u/:username" component={MyRating} />
                         </Switch>
                     </Base>
                     </BrowserRouter>

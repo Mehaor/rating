@@ -30,8 +30,8 @@ class BaseRouter {
     }
 
     private init() {
-
         this.router.get('/my', this.handleCookie, this.getIndex);
+        this.router.get('/u/:userName', this.handleCookie, this.getIndex);
         this.router.get('/', this.getIndex);
         this.router.get('/logout', this.logout);
     }

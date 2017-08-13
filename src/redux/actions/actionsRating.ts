@@ -21,6 +21,9 @@ export function updateMyRating(myData) {
     }
 }
 
+export function getUserRating() {
+    
+}
 
 export function getMyRating() {
     return (dispatch) => {

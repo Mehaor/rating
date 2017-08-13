@@ -21,7 +21,7 @@ class MyRating extends React.Component<any, any> {
         let rating: any[] = this.props.rating.map((item) => {return item});
         let value = rating.splice(evt.oldIndex, 1)[0];
         rating.splice(evt.newIndex, 0, value);
-        this.props.updateRating({rating, unrated: this.props.unrated});
+        this.props.updateRating({rating: rating, unrated: this.props.unrated});
     }
 
 
