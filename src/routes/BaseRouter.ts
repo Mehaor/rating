@@ -1,7 +1,8 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {User, UserSchema} from '../models/user';
+import {normalizeRatingIds} from '../utils';
 
-function normalizeRatingIds(ids: any[]): string[]  {
+/*function normalizeRatingIds(ids: any[]): string[]  {
     let ratingData = {};
     let normalizedIds = [];
     ids.forEach((id) => {
@@ -11,7 +12,7 @@ function normalizeRatingIds(ids: any[]): string[]  {
         }
     });
     return normalizedIds;
-}
+}*/
 
 class BaseRouter {
     router: Router;

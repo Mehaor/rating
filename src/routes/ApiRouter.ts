@@ -1,17 +1,7 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {User, UserSchema} from '../models/user';
+import {normalizeRatingIds, getPointsByIndex} from '../utils';
 
-function normalizeRatingIds(ids: any[]): string[]  {
-    let ratingData = {};
-    let normalizedIds = [];
-    ids.forEach((id) => {
-        if (!ratingData[id.toString()]) {
-            normalizedIds.push(id.toString());
-            ratingData[id.toString()] = true;
-        }
-    });
-    return normalizedIds;
-}
 
 class ApiRouter {
     router: Router;
@@ -52,13 +42,15 @@ class ApiRouter {
             let rating: any[] = [];
 
             users.forEach((user: any, index) => {
+                let userData = {_id: user.id, nickname: user.nickname, avatar: user.avatar};
                 if (ratingIds.indexOf(user._id) == -1) {
-                    unrated.push(user);
+                    unrated.push(userData);
                 }
                 else {
-                    rating.push(user);
+                    rating.push(userData);
                 }
             });
+
             rating.sort((a, b) => { return ratingIds.indexOf(a._id) - ratingIds.indexOf(b._id);});
             res.send({rating, unrated});
         })
@@ -68,7 +60,17 @@ class ApiRouter {
         if (!req.body.rating) {
             return res.status(400).send({'msg': 'error'});
         };
+        let ratingError = false;
+        let previousIds = normalizeRatingIds(req.user.rating);
         let ratingIds: string[] = normalizeRatingIds(req.body.rating);
+        previousIds.forEach((id) => {
+            if (ratingIds.indexOf(id) == -1) {
+                ratingError = true;
+            }
+        });
+        if (ratingError) {
+            return res.status(400).send({'msg': 'error'});
+        }
         User.update({_id: req.user._id}, {rating: ratingIds}, (err, raw) => {
             if (err) {
                 return res.status(400).send({'msg': 'error'});
@@ -83,12 +85,11 @@ class ApiRouter {
             users.forEach((user: any, index) => {
                 user.rating.forEach((id: string, index: number) => {
                     if (userRatingData[id] == undefined) {
-                        userRatingData[id] = index;
+                        userRatingData[id] = getPointsByIndex(index);
                     }
                     else {
-                        userRatingData[id] += index;
+                        userRatingData[id] += getPointsByIndex(index);
                     }
-                    
                 });
             });
             let ratedItems: any[] = [];
@@ -100,7 +101,8 @@ class ApiRouter {
                     ratedItems.push({_id: val._id, nickname: val.nickname, avatar: val.avatar, points: userRatingData[k] })
                 }
             });
-            ratedItems.sort((a, b) => { return a.points - b.points });
+
+            ratedItems.sort((a, b) => { return b.points - a.points });
             res.send(ratedItems);
         })
         // res.send({});
