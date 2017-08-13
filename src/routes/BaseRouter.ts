@@ -1,4 +1,17 @@
 import {Router, Request, Response, NextFunction} from 'express';
+import {User, UserSchema} from '../models/user';
+
+function normalizeRatingIds(ids: any[]): string[]  {
+    let ratingData = {};
+    let normalizedIds = [];
+    ids.forEach((id) => {
+        if (!ratingData[id.toString()]) {
+            normalizedIds.push(id.toString());
+            ratingData[id.toString()] = true;
+        }
+    });
+    return normalizedIds;
+}
 
 class BaseRouter {
     router: Router;
@@ -19,6 +32,25 @@ class BaseRouter {
         }
     }
 
+    normalizeRatings(req: Request, res: Response, next: NextFunction) {
+        User.find((err, users) => {
+            let promises = [];
+            users.forEach((user: any) => {
+                promises.push(new Promise((resolve, reject) => {
+                    let normalizedIds = normalizeRatingIds(user.rating);
+                    User.update({_id: user._id}, {rating: normalizedIds}, () => {
+                        resolve();
+                    })
+                }));
+            });
+            Promise.all(promises).then(() => {
+                res.send({});
+            })
+
+
+        });
+    }
+
     logout(req: Request, res: Response, next: NextFunction) {
         res.clearCookie('jwt');
         req.logOut();
@@ -32,6 +64,7 @@ class BaseRouter {
     private init() {
         this.router.get('/my', this.handleCookie, this.getIndex);
         this.router.get('/u/:userName', this.handleCookie, this.getIndex);
+        this.router.get('/norm', this.handleCookie, this.normalizeRatings);
         this.router.get('/', this.getIndex);
         this.router.get('/logout', this.logout);
     }
