@@ -34,7 +34,7 @@ class OverallRating extends React.Component<any, any> {
         return loading ? 
             <CircularProgress /> : 
             <div>
-                <UserList items={items} />
+                <UserList items={items} linked={true} />
                 <Snackbar open={this.state.messageOpen} message="Кеша иди нахуй" autoHideDuration={4000}/>
             </div>
     }

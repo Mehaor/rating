@@ -6,6 +6,7 @@ import Base from './components/Base';
 import Index from './components/Index';
 import MyRating from './components/MyRating';
 import OverallRating from './components/OverallRating';
+import {Users} from './components/shared/User';
 import {connect, Provider} from 'react-redux';
 import {store} from './redux/reducers/reducers';
 import {MuiThemeProvider} from 'material-ui/styles';
@@ -37,7 +38,8 @@ class App extends React.Component<any, any> {
                         <Switch>
                             <Route exact path="/" component={OverallRating} />
                             <Route exact path="/my" component={MyRating} />
-                            <Route path="/u/:username" component={MyRating} />
+                            <Route path="/u/:username" component={Users} />
+                            <Route path="/u" component={Users} />
                         </Switch>
                     </Base>
                     </BrowserRouter>

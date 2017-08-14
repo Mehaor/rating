@@ -1,6 +1,6 @@
 import {Router, Request, Response, NextFunction} from 'express';
 import {User, UserSchema} from '../models/user';
-import {normalizeRatingIds, getPointsByIndex} from '../utils';
+import {normalizeRatingIds, getPointsByIndex, getRatedList} from '../utils';
 
 
 class ApiRouter {
@@ -82,46 +82,18 @@ class ApiRouter {
         });
     }
 
+    getUsers(req: Request, res: Response, next:  NextFunction) {
+        User.find({isActive: true}, (err, users) => {
+            res.send(getRatedList(users, true));
+        })
+    }
+
     getOverallRatingData(req: Request, res: Response, next:  NextFunction) {
         User.find({isActive: true}, (err, users: any) => {
-            let userRatingData = {};
-            users.forEach((user: any, index) => {
-                user.rating.forEach((id: string, index: number) => {
-                    if (id.toString() == user._id.toString()) {
-                    }
-                    else if (userRatingData[id] == undefined) {
-                        userRatingData[id] = getPointsByIndex(index);
-                    }
-                    else {
-                        userRatingData[id] += getPointsByIndex(index);
-                    }
-                });
-            });
-            let ratedItems: any[] = [];
-            Object.keys(userRatingData).forEach((k) => {
-                let val: any = users.find((val: any, index: number, obj: any[]) => {
-                    return val._id == k;
-                });
-                if (val) {
-                    ratedItems.push({_id: val._id, nickname: val.nickname, avatar: val.avatar, points: userRatingData[k] })
-                }
-            });
-
-            ratedItems.sort((a, b) => { return b.points - a.points });
-            let lastPlace = 1;
-            ratedItems.forEach((item: any, index: number) => {
-                if (index == 0) {
-                    item.position = 1;
-                }
-                else {
-                    if (item.points < ratedItems[index - 1].points) {
-                        lastPlace++;
-                    }
-                    item.position = lastPlace;
-                }
-
-            })
-            res.send(ratedItems);
+            if (err) {
+                return res.status(400).send({'msg': 'error'});
+            }
+            res.send(getRatedList(users, Boolean(req.query.rating)));
         })
         // res.send({});
     }
@@ -129,6 +101,7 @@ class ApiRouter {
     init() {
         this.router.get('/my', this.checkUserIsAuthenticated, this.getMyRatingData);
         this.router.patch('/my', this.checkUserIsAuthenticated, this.updateMyRating);
+        this.router.get('/users', this.checkUserIsAuthenticated, this.getUsers);
         this.router.get('/overall', this.checkUserIsAuthenticated, this.getOverallRatingData);
         
     }

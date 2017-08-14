@@ -34,10 +34,11 @@ export function getMyRating() {
     }
 }
 
-export function getOverallRating() {
+export function getOverallRating(withUserRating: boolean = false) {
     return (dispatch) => {
         dispatch(setOverallRating({loading: true, items: []}));
-        api.get('/overall').then((response: any) => {
+        let params = withUserRating ? {rating: '1'} : {}
+        api.get('/overall', {params: params}).then((response: any) => {
             dispatch(setOverallRating({loading: false, items: response.data}));
         }).catch((err) => {})
     }

@@ -25,16 +25,16 @@ export interface IUserModel extends mongoose.Model<IUSerSchema> {
 export const UserSchema = new mongoose.Schema({
     username: {type: String, required: true, unique: true, index: true},
     nickname: {type: String, required: true, index: true},
-    jwt: String,
-    email: String,
-    password: String,
+    jwt: {type: String, select: true},
+    email: {type: String, select: false},
+    password: {type: String, select: false},
     avatar: String,
     socialType: String,
-    socialUid: String,
+    socialUid: {type: String, select: false},
     socialUrl: String,
-    isModerator: {type: Boolean, default: false},
-    isSuperUser: {type: Boolean, default: false},
-    isActive: {type: Boolean, default: true},
+    isModerator: {type: Boolean, default: false, select: false},
+    isSuperUser: {type: Boolean, default: false, select: false},
+    isActive: {type: Boolean, default: true, select: false},
     rating: {type: [mongoose.Schema.Types.ObjectId], default: []},
 
 }, {collection: 'users'});
