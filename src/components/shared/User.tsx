@@ -9,13 +9,13 @@ import {getOverallRating} from '../../redux/actions/actionsRating';
 import Divider from 'material-ui/Divider';
 import Subheader from 'material-ui/Subheader';
 import {setTitle} from '../../redux/actions/actionsTitle';
-import {grey200} from 'material-ui/styles/colors';
+import {grey200, green50} from 'material-ui/styles/colors';
 
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card';
 
 import {withRouter} from 'react-router-dom';
 
-export const UserItem = ({item, position=0, withPoints=false}) =>  <ListItem
+/*export const UserItem = ({item, position=0, withPoints=false}) =>  <ListItem
     leftAvatar={
         <Avatar
           className='avatar'
@@ -24,19 +24,41 @@ export const UserItem = ({item, position=0, withPoints=false}) =>  <ListItem
       }>{position ? `${position}. ` : ''}
         {item.nickname}{withPoints ? ` (${item.points})` : ''}
         {item.otherPosition ? ` [${item.otherPosition} место]` : ''}
-    </ListItem>;
+</ListItem>;*/
+
+
+class UserItemClass extends React.Component<any, any> {
+
+    render() {
+        let {item, position, withPoints, user} = this.props;
+        let style = (user && item && item._id == user.id) ? { backgroundColor: green50 } : {};
+        return <ListItem style={style} leftAvatar={ <Avatar className='avatar' src={item.avatar} size={30}/> } >
+            {position ? `${position}. ` : ''}
+            {item.nickname}{withPoints ? ` (${item.points})` : ''}
+            {item.otherPosition ? ` [${item.otherPosition} место]` : ''}
+        </ListItem>;
+    }
+}
+
+const mapUserItemStateToProps = (state: any, ownProps: any) => {
+    return {
+        user: state.user,
+    }
+}
+
+export const UserItem = connect(mapUserItemStateToProps, null)(UserItemClass);
 
 export const LinkItem = ({item, position=0, withPoints=false}) => <Link to={`/u/${item.username}`} >
     <UserItem item={item} position={position} withPoints={withPoints} />
 </Link>;
 
 export const UserList = ({items, linked=false, withPoints=true, listPosition=false}) => <List>
-        {items.map((item, index) => {
-            let ItemComponent: any = linked ? LinkItem : UserItem;
-            let position = listPosition ? index + 1 : item.position;
-            return <ItemComponent key={item._id} item={item} position={position} withPoints={withPoints} /> 
-        })}
-    </List>;
+    {items.map((item, index) => {
+        let ItemComponent: any = linked ? LinkItem : UserItem;
+        let position = listPosition ? index + 1 : item.position;
+        return <ItemComponent key={item._id} item={item} position={position} withPoints={withPoints} /> 
+    })}
+</List>;
 
 
 export const UserListSortable = ({items, sortableOptions, withPlace=false}) => 
@@ -98,6 +120,7 @@ class UsersClass extends React.Component<any, any> {
                 val.ratedBy.push(Object.assign({}, item, {otherPosition: ratingIndex + 1}));
             }
         });
+        val.ratedBy.sort((a, b) => { return a.otherPosition - b.otherPosition });
         this.props.setTPTitle(val.nickname);
         this.setState({userData: val});
     }

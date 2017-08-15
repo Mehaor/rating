@@ -1,3 +1,5 @@
+import {yellow500, amber500, green500, blue500, red900, deepPurple500, teal500} from 'material-ui/styles/colors';
+
 export namespace ACTIONS {
     export const USER_DATA: string = 'user_data';
 
@@ -17,3 +19,5 @@ export namespace SIZES {
     export const LEFT_PANEL_SIZE: number = 200;
     export const MAX_CONTENT_WIDTH: number = 800;
 }
+
+export const WEEKDAY_PRIMARY_COLORS: string[] = [yellow500, amber500, green500, blue500, red900, deepPurple500, teal500];

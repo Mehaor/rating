@@ -11,15 +11,20 @@ import {connect, Provider} from 'react-redux';
 import {store} from './redux/reducers/reducers';
 import {MuiThemeProvider} from 'material-ui/styles';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {cyan500, cyan100, blueGrey500} from 'material-ui/styles/colors';
+import {cyan500} from 'material-ui/styles/colors';
+import {WEEKDAY_PRIMARY_COLORS} from './constants';
 
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
+function getPrimaryColor(): string {
+    return WEEKDAY_PRIMARY_COLORS[(new Date()).getDay()] || cyan500;
+}
+
 const muiTheme = getMuiTheme({
     palette: {
         // textColor: cyan100,
-        primary1Color: blueGrey500,
+        primary1Color: getPrimaryColor(),
     }
 });
 
