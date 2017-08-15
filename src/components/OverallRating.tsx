@@ -6,6 +6,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import {setLeftPanelOpen} from '../redux/actions/actionsLeftPanel';
 import {setTitle} from '../redux/actions/actionsTitle';
 import Snackbar from 'material-ui/Snackbar';
+import FontIcon from 'material-ui/FontIcon';
 
 class OverallRating extends React.Component<any, any> {
     
@@ -34,8 +35,11 @@ class OverallRating extends React.Component<any, any> {
         return loading ? 
             <CircularProgress /> : 
             <div>
+                <FontIcon className="fa fa-heart"/>
                 <UserList items={items} linked={true} />
                 <Snackbar open={this.state.messageOpen} message="Кеша иди нахуй" autoHideDuration={4000}/>
+                <FontIcon className="fa fa-wheelchair"/>
+
             </div>
     }
 }

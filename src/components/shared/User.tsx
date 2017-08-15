@@ -49,13 +49,15 @@ const UserData = ({item}) => item ? <Card style={{backgroundColor: grey200}}>
 
     <CardHeader title={item.nickname} subtitle={`Место ${item.position}, очков ${item.points}`} avatar={item.avatar} />
     <CardText>
-        {item.ratingList.length ? [<Subheader key="subheader">РЕЙТИНГ</Subheader>,
-        <UserList key="list" items={item.ratingList} linked={true} withPoints={false} listPosition={true} />,
-        <Divider key="divider" />] : null}
+        {item.ratingList.length ? [
+            <Subheader key="subheader">ЛИЧНЫЙ РЕЙТИНГ</Subheader>,
+            <UserList key="list" items={item.ratingList} linked={true} withPoints={false} listPosition={true} />,
+            <Divider key="divider" />
+            ] : null}
 
         {
             item.ratedBy.length ? [
-                <Subheader key="subheader">ГОЛОСОВАЛИ</Subheader>,
+                <Subheader key="subheader">В ЧУЖИХ РЕЙТИНГАХ</Subheader>,
                 <UserList key="list" items={item.ratedBy} linked={true} withPoints={false} listPosition={true} />,
             ] : null
         }
@@ -113,7 +115,6 @@ class UsersClass extends React.Component<any, any> {
 
     render() {
         let {items, loading} = this.props;
-        console.log(this.state.userData);
         return <div>
             {this.state.userData ? [
                 <UserData item={this.state.userData} key="user_data" />,

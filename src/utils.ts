@@ -2,7 +2,7 @@ export function normalizeRatingIds(ids: any[], userId: any): string[]  {
     let ratingData = {};
     let normalizedIds = [];
     ids.forEach((id) => {
-        if (!ratingData[id.toString()] && (id.toString() != userId.toString())) {
+        if (id && !ratingData[id.toString()] && (id.toString() != userId.toString())) {
             normalizedIds.push(id.toString());
             ratingData[id.toString()] = true;
         }

@@ -11,17 +11,34 @@ class MyRating extends React.Component<any, any> {
 
     onAddHandle(evt: any) {
 
-        let rating: any[] = this.props.rating.map((item) => {return item});
+        /*let rating: any[] = this.props.rating.map((item) => {return item});
         let unrated: any[] = this.props.unrated.map((item) => {return item});
         rating.splice(evt.newIndex, 0, unrated.splice(evt.oldIndex, 1)[0]);
+
+        this.props.updateRating({rating, unrated});*/
+        this.addItem(evt.oldIndex, evt.newIndex);
+    }
+    
+    addItem(oldIndex: number, newIndex: number) {
+        let rating: any[] = this.props.rating.map((item) => {return item});
+        let unrated: any[] = this.props.unrated.map((item) => {return item});
+        rating.splice(newIndex, 0, unrated.splice(oldIndex, 1)[0]);
 
         this.props.updateRating({rating, unrated});
     }
 
     onSortHandle(evt: any) {
-        let rating: any[] = this.props.rating.map((item) => {return item});
+        /*let rating: any[] = this.props.rating.map((item) => {return item});
         let value = rating.splice(evt.oldIndex, 1)[0];
         rating.splice(evt.newIndex, 0, value);
+        this.props.updateRating({rating: rating, unrated: this.props.unrated});*/
+        this.sortItem(evt.oldIndex, evt.newIndex);
+    }
+
+    sortItem(oldIndex: number, newIndex: number) {
+        let rating: any[] = this.props.rating.map((item) => {return item});
+        let value = rating.splice(oldIndex, 1)[0];
+        rating.splice(newIndex, 0, value);
         this.props.updateRating({rating: rating, unrated: this.props.unrated});
     }
 

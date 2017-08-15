@@ -36,16 +36,24 @@ class BaseRouter {
     normalizeRatings(req: Request, res: Response, next: NextFunction) {
         User.find((err, users) => {
             let promises = [];
+            let userIds = users.map((u) => { return u._id.toString(); });
             users.forEach((user: any) => {
                 promises.push(new Promise((resolve, reject) => {
-                    let normalizedIds = normalizeRatingIds(user.rating, user._id);
+                    let rating =  user.rating.map((id) => {
+                        if (userIds.indexOf(id.toString()) != -1) {
+                            return id;
+                        }
+                        return null;
+                    });
+                    
+                    let normalizedIds = normalizeRatingIds(rating, user._id);
                     User.update({_id: user._id}, {rating: normalizedIds}, () => {
                         resolve();
                     })
                 }));
             });
             Promise.all(promises).then(() => {
-                res.send({});
+                res.redirect('/');
             })
 
 
