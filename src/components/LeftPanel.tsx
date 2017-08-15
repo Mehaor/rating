@@ -14,7 +14,7 @@ class LeftPanel extends React.Component<any, any> {
         let {open, isDesktop, setOpen} = this.props;
         return (
             <Drawer open={isDesktop || open} docked={isDesktop} width={SIZES.LEFT_PANEL_SIZE} onRequestChange={setOpen}>
-                <AppBar onLeftIconButtonTouchTap={setOpen.bind(this, false)} showMenuIconButton={!isDesktop} />
+                {!isDesktop ? <AppBar onLeftIconButtonTouchTap={setOpen.bind(this, false)} showMenuIconButton={!isDesktop} /> : null}
                 <Link to="/"><MenuItem leftIcon={<FontIcon className="fa fa-list-ol" />} focusState={'focused'}>Общий</MenuItem></Link>
                 <Link  to="/my"><MenuItem leftIcon={<FontIcon className="fa fa-heart" />} focusState={'focused'} rightIcon={null}>Мой рейтинг</MenuItem></Link>
                 <Divider />
